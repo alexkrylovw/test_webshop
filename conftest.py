@@ -1,0 +1,16 @@
+import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
+def user_language_addoption(parser):
+    parser.addoption('--language', action='store', default=None,
+                     help="Choose from langs: (en/ru/es/...)")
+
+@pytest.fixture(scope="function")
+def browser(request):
+    user_language = request.config.getoption("language")
+    options = Options()
+    options.add_experimental_option('prefs', {'intl.accept_languages': user_language})
+    browser = webdriver.Chrome("C:/study_pystuff/selenium_stepik/chromedriver.exe", options=options)
+    yield browser
+    browser.quit()
